@@ -11,15 +11,17 @@ fundButton.onclick = fund
 balanceButton.onclick = getBalance
 
 async function connect() {
-  if (typeof window.ethereum !== "undefined") {
+  if (typeof window.ethereum !== "undefined") { // Does this browser have metamask?
     try {
-      await ethereum.request({ method: "eth_requestAccounts" })
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" }) // If so, ask metamask if this browser can connect to it and access the account information
+      connectButton.innerHTML = "Connected to " + accounts[0].substring(0, 6)
+      console.log("We connected to " + accounts[0])
     } catch (error) {
       console.log(error)
     }
-    connectButton.innerHTML = "Connected"
-    const accounts = await ethereum.request({ method: "eth_accounts" })
-    console.log(accounts)
+    // const accounts = await ethereum.request({ method: "eth_accounts" })
+    // connectButton.innerHTML = "Connected"
+    // console.log(accounts)
   } else {
     connectButton.innerHTML = "Please install MetaMask"
   }
@@ -58,6 +60,7 @@ async function fund() {
         value: ethers.parseEther(ethAmount),
       })
       await transactionResponse.wait(1)
+      console.log("Funded with " + ethAmount + "ETH")
     } catch (error) {
       console.log(error)
     }
@@ -71,7 +74,7 @@ async function getBalance() {
     const provider = new ethers.BrowserProvider(window.ethereum)
     try {
       const balance = await provider.getBalance(contractAddress)
-      console.log(ethers.formatEther(balance))
+      console.log("Contract balance is " + ethers.formatEther(balance) + " ETH")
     } catch (error) {
       console.log(error)
     }
