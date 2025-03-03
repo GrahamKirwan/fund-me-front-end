@@ -38,7 +38,7 @@ async function withdraw() {
       console.log("Processing transaction...")
       const transactionResponse = await contract.withdraw()
       await transactionResponse.wait(1)
-      console.log("Done!")
+      console.log("Withdrawal complete!")
     } catch (error) {
       console.log(error)
     }
